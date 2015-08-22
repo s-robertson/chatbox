@@ -1,5 +1,7 @@
 /**
  * Configuration file template.
+ *
+ * Do not modify this file, create a new config.js file instead.
  */
 
 var config = {
@@ -11,7 +13,8 @@ var config = {
     dialect: '',
   },
   session: {
-    'secret': 'MGuQ7hjUypGXXOGl2cjYFPl4K1VNK6gBFhUCT4AF'
+    secret: '',
+    cookieName: ''
   }
 };
 

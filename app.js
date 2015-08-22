@@ -30,26 +30,36 @@ app.set('view engine', 'jade');
 // initalize sequelize with session store
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
 
+var cParser = cookieParser(config.session.secret);
+app.set('cookieParser', cParser);
 app.use(cookieParser());
 
 var sess = {
   secret: config.session.secret,
+  name: config.session.cookieName,
   cookie: { secure: false },
   saveUninitialized: true,
   resave: true
 }
+
+var sessionStore;
 
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   sess.cookie.secure = true // serve secure cookies
 
   // Only use database for session in production setting.
-  sess.store = new SequelizeStore({
+  sessionStore = new SequelizeStore({
     db: sequelize
   });
 }
+else {
+  sessionStore = new session.MemoryStore();
+}
 
+sess.store = sessionStore;
 app.use(session(sess));
+app.set('sessionStore', sessionStore);
 
 app.use('/', routes);
 app.use('/users', users);
@@ -91,5 +101,7 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
+
+require('./app/sockets')(app);
 
 module.exports = app;
