@@ -11,6 +11,7 @@ var routes = require('./app/routes/index');
 var users = require('./app/routes/users');
 
 var app = express();
+var config = require('./app/config/config');
 
 // Socket.io
 var io = socket_io();
@@ -32,10 +33,7 @@ var SequelizeStore = require('connect-session-sequelize')(session.Store);
 app.use(cookieParser());
 
 var sess = {
-  secret: 'placeholder remove me later',
-  store: new SequelizeStore({
-    db: sequelize
-  }),
+  secret: config.session.secret,
   cookie: { secure: false },
   saveUninitialized: true,
   resave: true
@@ -44,6 +42,11 @@ var sess = {
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   sess.cookie.secure = true // serve secure cookies
+
+  // Only use database for session in production setting.
+  sess.store = new SequelizeStore({
+    db: sequelize
+  });
 }
 
 app.use(session(sess));
