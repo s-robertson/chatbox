@@ -2,13 +2,13 @@
   var chatboxId = $('#chatbox').attr('data-chatboxid');
   window.socket = io('http://localhost:3000/chatbox', {query: 'chatboxId=' + chatboxId});
 
-  var $loginBix = $('#login-box');
+  var $loginBox = $('#login-box');
   var $messageBox = $('#message-box');
 
   // Login-related events
-  $loginBix.submit(function() {
-    var username = $loginBix.find('#username').val(),
-      password = $loginBix.find('#password').val();
+  $loginBox.submit(function() {
+    var username = $loginBox.find('#username').val(),
+      password = $loginBox.find('#password').val();
 
     socket.emit('chat login', username, password);
     return false;
@@ -19,13 +19,13 @@
       $messageBox.show();
     }
     else {
-      $loginBix.show();
+      $loginBox.show();
     }
   })
 
   socket.on('chat authentication', function(err, authenticated) {
     if (authenticated) {
-      $loginBix.hide();
+      $loginBox.hide();
       $messageBox.show();
     }
     else {
