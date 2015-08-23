@@ -37,6 +37,7 @@ module.exports = function(app) {
     var chatboxId = socket.handshake.query.chatboxId;
 
     if (chatboxId) {
+      console.log('here');
       socket.join(chatboxId);
       var models = app.get('models');
       var session = socket.request.session || {};
@@ -50,9 +51,7 @@ module.exports = function(app) {
         username = session.chatBoxes[chatboxId].user.username;
       }
 
-      if (username) {
-        chatboxIo.to(chatboxId).emit('user joined', username);
-      }
+      chatboxIo.to(chatboxId).emit('user connected', username);
 
       socket.on('chat login', function(username, password) {
         models.User.authenticate(chatboxId, username, password, function(err, authenticated, user) {
