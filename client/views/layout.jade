@@ -1,0 +1,12 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    != LRScript
+  body
+    block content
+    script(src='/socket.io/socket.io.js')
+    script(src='/bower_components/jquery/dist/jquery.min.js')
+    script(src='/js/script.js')
+
