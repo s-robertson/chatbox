@@ -13,13 +13,13 @@ var users = require('./app/routes/users');
 var app = express();
 var config = require('./app/config/config');
 
-// Live reload for development
-if (app.get('env') === 'development') {
-  livereload = require('express-livereload');
-  livereload(app, {
-    watchDir: __dirname + '/client'
-  });
-}
+livereload = require('express-livereload');
+livereload(app, {
+  watchDir: [
+    __dirname + '/public',
+    __dirname + '/app/views'
+  ]
+});
 
 // Socket.io
 var io = socket_io();
@@ -30,7 +30,7 @@ require('./app/')(app);
 var sequelize = app.get('models').sequelize;
 
 // view engine setup
-app.set('views', path.join(__dirname, 'client/views'));
+app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'jade');
 
 // session setup
@@ -77,7 +77,7 @@ app.use('/users', users);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'client/public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // error handlers
 

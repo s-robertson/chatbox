@@ -14,10 +14,12 @@ Currently, the features of the app include:
   in the PostgreSQL database.
 * Users are stored in the database, passwords are hashed and authenticated using bcrypt.
 * Chatbox instances are stored in the database.
+* Live reload of frontend during development.
   
-Wishlist of future features:
+Future features:
 
 * Ability to register for a chatbox account.
 * Ability to register and create new chatbox instances.
 * Ability to administer chatbox instances.
 * Anonymous user support.
+* Store messages in the database so returning users can see the most recent messages.
