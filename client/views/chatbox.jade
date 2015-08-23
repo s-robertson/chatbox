@@ -18,3 +18,7 @@ block content
       form#message-form
         input(autocomplete='off')#message
         button Send
+
+append body-scripts
+  script(src='/socket.io/socket.io.js')
+  script(src='/js/chatbox.js')

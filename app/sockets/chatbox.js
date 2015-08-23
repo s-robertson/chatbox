@@ -42,20 +42,21 @@ module.exports = function(app) {
       var models = app.get('models');
       var session = socket.request.session || {};
       var username = null;
+      var authenticated = false;
 
-      if (!session.chatBoxes) {
-        session.chatBoxes = [];
-      }
-
-      if (session.chatBoxes[chatboxId]) {
+      if (session.chatBoxes && session.chatBoxes[chatboxId]) {
+        authenticated = true;
         username = session.chatBoxes[chatboxId].user.username;
       }
+      else if (!session.chatBoxes) {
+        session.chatBoxes = {};
+      }
 
-      chatboxIo.to(chatboxId).emit('user connected', username);
+      socket.emit('user connected', username);
 
       socket.on('chat login', function(username, password) {
-        models.User.authenticate(chatboxId, username, password, function(err, authenticated, user) {
-          if (authenticated) {
+        models.User.authenticate(chatboxId, username, password, function(err, authd, user) {
+          if (authd) {
             session.chatBoxes[chatboxId] = {
               user: user
             };
@@ -63,7 +64,8 @@ module.exports = function(app) {
             session.save();
           }
 
-          socket.emit('chat authentication', err, authenticated);
+          authenticated = authd;
+          socket.emit('chat authentication', err, authd);
         });
       });
 
@@ -76,7 +78,9 @@ module.exports = function(app) {
       });
 
       socket.on('chat message', function(msg){
-        chatboxIo.to(chatboxId).emit('chat message', msg);
+        if (authenticated) {
+          chatboxIo.to(chatboxId).emit('chat message', session.chatBoxes[chatboxId].user.username, msg);
+        }
       });
     }
   });

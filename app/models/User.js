@@ -23,6 +23,16 @@ var authenticateUser = function(chatboxId, username, password, callback) {
   });
 }
 
+var generateUserValues = function(user) {
+  var salt = bcrypt.genSaltSync();
+  user.password = bcrypt.hashSync(user.password, salt);
+
+  // Default access level to the lowest.
+  if (!user.accessLevel) {
+    user.accessLevel = 1;
+  }
+};
+
 module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define('user', {
     username: {
@@ -52,12 +62,12 @@ module.exports = function(sequelize, DataTypes) {
   });
 
   User.beforeCreate(function(user, options) {
-    var salt = bcrypt.genSaltSync();
-    user.password = bcrypt.hashSync(user.password, salt);
+    generateUserValues(user);
+  });
 
-    // Default access level to the lowest.
-    if (!user.accessLevel) {
-      user.accessLevel = 1;
+  User.beforeBulkCreate(function(users, options) {
+    for (var i in users) {
+      generateUserValues(users[i]);
     }
   });
 

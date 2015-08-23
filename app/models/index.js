@@ -27,20 +27,46 @@ models.forEach(function(model) {
   m.Message.belongsTo(m.Chatbox, {as: "chatbox"});
   m.User.belongsTo(m.Chatbox, {as: 'chatbox'});
 
+  // Test Data
   m.Chatbox.sync({force: true}).then(function() {
-    return m.Chatbox.create({
-      name: 'Test Box'
-    });
+    return m.Chatbox.bulkCreate([
+      {
+        name: 'Test Box'
+      },
+      {
+        name: 'Test Box 2'
+      }
+    ]);
   });
 
   m.Message.sync({force: true});
   m.User.sync({force: true}).then(function() {
-    return m.User.create({
-      username: 'Scott',
-      password: 'testing',
-      email: 'srobertson203@gmail.com',
-      chatboxId: 1
-    });
+    return m.User.bulkCreate([
+      {
+        username: 'user1',
+        password: 'testing',
+        email: 'test1@test.com',
+        chatboxId: 1
+      },
+      {
+        username: 'user2',
+        password: 'testing',
+        email: 'test2@test.com',
+        chatboxId: 1
+      },
+      {
+        username: 'user3',
+        password: 'testing',
+        email: 'test2@test.com',
+        chatboxId: 2
+      },
+      {
+        username: 'user4',
+        password: 'testing',
+        email: 'test2@test.com',
+        chatboxId: 2
+      }
+    ]);
   });
 
 })(module.exports);

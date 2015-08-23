@@ -34,14 +34,16 @@
   });
 
   // Message-related events
-  $('#message-form').submit(function(){
-    socket.emit('chat message', $('#message').val());
-    $('#m').val('');
-    return false;
+  $('#message-form').submit(function(e){
+    var $messageInput = $('#message');
+    socket.emit('chat message', $messageInput.val());
+    $messageInput.val('');
+
+    e.preventDefault();
   });
 
-  socket.on('chat message', function(msg){
-    $('#messages').append($('<li>').text(msg));
+  socket.on('chat message', function(username, msg){
+    $('#messages').append($('<div>').text(username + ': ' + msg));
   });
 
 })(jQuery);
