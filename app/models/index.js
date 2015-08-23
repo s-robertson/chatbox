@@ -14,7 +14,8 @@ var sequelize = new Sequelize(
 // load models
 var models = [
   'Chatbox',
-  'Message'
+  'Message',
+  'User'
 ];
 
 models.forEach(function(model) {
@@ -23,7 +24,8 @@ models.forEach(function(model) {
 
 // describe relationships
 (function(m) {
-  m.Message.belongsTo(m.Chatbox);
+  m.Message.belongsTo(m.Chatbox, {as: "chatbox"});
+  m.User.belongsTo(m.Chatbox, {as: 'chatbox'});
 
   m.Chatbox.sync({force: true}).then(function() {
     return m.Chatbox.create({
@@ -32,6 +34,14 @@ models.forEach(function(model) {
   });
 
   m.Message.sync({force: true});
+  m.User.sync({force: true}).then(function() {
+    return m.User.create({
+      username: 'Scott',
+      password: 'testing',
+      email: 'srobertson203@gmail.com',
+      chatboxId: 1
+    });
+  });
 
 })(module.exports);
 
