@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
-  var Chatbox = sequelize.define('chatbox', {
+  var Chatbox = sequelize.define('Chatbox', {
     name: {
       type: DataTypes.STRING
     },

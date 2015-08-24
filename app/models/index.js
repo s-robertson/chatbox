@@ -1,74 +1,75 @@
-var Sequelize = require('sequelize');
-var config = require('../config/config');
+var fs = require('fs'),
+  path = require('path'),
+  Sequelize = require('sequelize'),
+  config = require('../../config/config'),
+  db = {};
 
-var sequelize = new Sequelize(
-  config.database.dbname,
-  config.database.username,
-  config.database.password,
-  {
-    host: config.database.host,
-    dialect: config.database.dialect
-  }
-);
+var sequelize = new Sequelize(config.database);
 
-// load models
-var models = [
-  'Chatbox',
-  'Message',
-  'User'
-];
-
-models.forEach(function(model) {
-  module.exports[model] = sequelize.import(__dirname + '/' + model);
+fs.readdirSync(__dirname).filter(function (file) {
+  return (file.indexOf('.') !== 0) && (file !== 'index.js');
+}).forEach(function (file) {
+  var model = sequelize['import'](path.join(__dirname, file));
+  db[model.name] = model;
 });
 
-// describe relationships
-(function(m) {
-  m.Message.belongsTo(m.Chatbox, {as: "chatbox"});
-  m.User.belongsTo(m.Chatbox, {as: 'chatbox'});
+Object.keys(db).forEach(function (modelName) {
+  if ('associate' in db[modelName]) {
+    db[modelName].associate(db);
+  }
+});
 
-  // Test Data
-  m.Chatbox.sync({force: true}).then(function() {
-    return m.Chatbox.bulkCreate([
-      {
-        name: 'Test Box'
-      },
-      {
-        name: 'Test Box 2'
-      }
-    ]);
-  });
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
-  m.Message.sync({force: true});
-  m.User.sync({force: true}).then(function() {
-    return m.User.bulkCreate([
-      {
-        username: 'user1',
-        password: 'testing',
-        email: 'test1@test.com',
-        chatboxId: 1
-      },
-      {
-        username: 'user2',
-        password: 'testing',
-        email: 'test2@test.com',
-        chatboxId: 1
-      },
-      {
-        username: 'user3',
-        password: 'testing',
-        email: 'test2@test.com',
-        chatboxId: 2
-      },
-      {
-        username: 'user4',
-        password: 'testing',
-        email: 'test2@test.com',
-        chatboxId: 2
-      }
-    ]);
-  });
+module.exports = db;
 
-})(module.exports);
+/*
+ // describe relationships
+ (function(m) {
 
-module.exports.sequelize = sequelize;
+ // Test Data
+ m.Chatbox.sync({force: true}).then(function() {
+ return m.Chatbox.bulkCreate([
+ {
+ name: 'Test Box'
+ },
+ {
+ name: 'Test Box 2'
+ }
+ ]);
+ });
+
+ m.Message.sync({force: true});
+ m.User.sync({force: true}).then(function() {
+ return m.User.bulkCreate([
+ {
+ username: 'user1',
+ password: 'testing',
+ email: 'test1@test.com',
+ chatboxId: 1
+ },
+ {
+ username: 'user2',
+ password: 'testing',
+ email: 'test2@test.com',
+ chatboxId: 1
+ },
+ {
+ username: 'user3',
+ password: 'testing',
+ email: 'test2@test.com',
+ chatboxId: 2
+ },
+ {
+ username: 'user4',
+ password: 'testing',
+ email: 'test2@test.com',
+ chatboxId: 2
+ }
+ ]);
+ });
+
+ })(module.exports);
+
+ */
