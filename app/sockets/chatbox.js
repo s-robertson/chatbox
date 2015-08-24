@@ -1,7 +1,6 @@
-module.exports = function(app) {
-  var io = app.io;
+module.exports = function(app, io) {
   var cookieParser = app.get('cookieParser');
-  var config = require('../config/config');
+  var config = require('../../config/config');
   var sessionStore = app.get('sessionStore');
 
   var chatboxIo = io.of('/chatbox');

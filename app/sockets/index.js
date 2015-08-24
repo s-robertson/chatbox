@@ -1,3 +1,3 @@
-module.exports = function(app) {
-  require('./chatbox')(app);
+module.exports = function(app, io) {
+  require('./chatbox')(app, io);
 }

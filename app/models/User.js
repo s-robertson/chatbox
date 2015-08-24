@@ -1,5 +1,49 @@
 var bcrypt = require('bcrypt');
 
+module.exports = function(sequelize, DataTypes) {
+  var User = sequelize.define('User', {
+    username: {
+      type: DataTypes.STRING
+    },
+    password: {
+      type: DataTypes.STRING
+    },
+    email: {
+      type: DataTypes.STRING,
+      validate: {
+        isEmail: true
+      }
+    },
+    accessLevel: {
+      type: DataTypes.INTEGER,
+    }
+  },{
+    indexes: [
+      {
+        fields: ['username']
+      }
+    ],
+    classMethods: {
+      authenticate: authenticateUser,
+      associate: function(models) {
+        User.belongsTo(models.Chatbox, {as: 'chatbox'});
+      }
+    }
+  });
+
+  User.beforeCreate(function(user, options) {
+    generateUserValues(user);
+  });
+
+  User.beforeBulkCreate(function(users, options) {
+    for (var i in users) {
+      generateUserValues(users[i]);
+    }
+  });
+
+  return User;
+};
+
 var authenticateUser = function(chatboxId, username, password, callback) {
   var self = this;
 
@@ -32,45 +76,3 @@ var generateUserValues = function(user) {
     user.accessLevel = 1;
   }
 };
-
-module.exports = function(sequelize, DataTypes) {
-  var User = sequelize.define('user', {
-    username: {
-      type: DataTypes.STRING
-    },
-    password: {
-      type: DataTypes.STRING
-    },
-    email: {
-      type: DataTypes.STRING,
-      validate: {
-        isEmail: true
-      }
-    },
-    accessLevel: {
-      type: DataTypes.INTEGER,
-    }
-  },{
-    indexes: [
-      {
-        fields: ['username']
-      }
-    ],
-    classMethods: {
-      authenticate: authenticateUser
-    }
-  });
-
-  User.beforeCreate(function(user, options) {
-    generateUserValues(user);
-  });
-
-  User.beforeBulkCreate(function(users, options) {
-    for (var i in users) {
-      generateUserValues(users[i]);
-    }
-  });
-
-  return User;
-}
-
