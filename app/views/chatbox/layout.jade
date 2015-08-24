@@ -1,0 +1,11 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    block head-scripts
+      != LRScript
+  body
+    block content
+    block body-scripts
+      script(src='/bower_components/jquery/dist/jquery.min.js')

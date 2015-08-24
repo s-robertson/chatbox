@@ -13,14 +13,6 @@ var users = require('./app/routes/users');
 var app = express();
 var config = require('./app/config/config');
 
-livereload = require('express-livereload');
-livereload(app, {
-  watchDir: [
-    __dirname + '/public',
-    __dirname + '/app/views'
-  ]
-});
-
 // Socket.io
 var io = socket_io();
 app.io = io;

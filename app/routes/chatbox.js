@@ -4,13 +4,13 @@ module.exports = function(router) {
     var models = req.app.get('models');
 
     var invalidId = function() {
-      res.render('invalid_box');
+      res.render('chatbox/invalid');
     }
 
     if (boxId) {
       models.Chatbox.findById(boxId).then(function(chatbox) {
         if (chatbox) {
-          res.render('chatbox', {
+          res.render('chatbox/index', {
             chatbox: chatbox
           });
         }
