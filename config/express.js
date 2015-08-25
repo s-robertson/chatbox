@@ -26,7 +26,6 @@ module.exports = function(app, config, server) {
     extended: true
   }));
 
-  // BEGIN CUSTOM
   var cParser = cookieParser(config.session.secret);
   app.set('cookieParser', cParser);
   app.use(cookieParser());
@@ -57,7 +56,6 @@ module.exports = function(app, config, server) {
   sess.store = sessionStore;
   app.use(session(sess));
   app.set('sessionStore', sessionStore);
-  // END CUSTOM
 
   app.use(compress());
   app.use(express.static(config.root + '/public'));
@@ -95,5 +93,4 @@ module.exports = function(app, config, server) {
   });
 
   require('../app/sockets')(app, io);
-
 };
