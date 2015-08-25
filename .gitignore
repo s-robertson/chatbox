@@ -29,4 +29,4 @@ node_modules
 public/components
 
 # Sensitive information
-app/config/config.js
+config/config.js
