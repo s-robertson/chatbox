@@ -1,20 +1,14 @@
-/**
- * Configuration file template.
- *
- * Do not modify this file, create a new config.js file instead.
- */
+var path = require('path'),
+  rootPath = path.normalize(__dirname + '/..'),
+  env = process.env.NODE_ENV || 'development';
 
 var config = {
-  database: {
-    host: '',
-    dbname: '',
-    username: '',
-    password: '',
-    dialect: '',
-  },
+  root: rootPath,
+  port: 3000,
+  database: 'postgres://example:example@localhost/example',
   session: {
-    secret: '',
-    cookieName: ''
+    secret: 'some secret key here',
+    cookieName: 'cookie name here'
   }
 };
 
