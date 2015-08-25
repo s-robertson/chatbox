@@ -9,15 +9,13 @@ var compress = require('compression');
 var methodOverride = require('method-override');
 var session = require('express-session');
 
-module.exports = function(app, config, server) {
+module.exports = function(app, config) {
   var env = process.env.NODE_ENV || 'development';
   app.locals.ENV = env;
   app.locals.ENV_DEVELOPMENT = env == 'development';
 
   app.set('views', config.root + '/app/views');
   app.set('view engine', 'jade');
-
-  var io = require('socket.io')(server);
 
   // app.use(favicon(config.root + '/public/img/favicon.ico'));
   app.use(logger('dev'));
@@ -91,6 +89,4 @@ module.exports = function(app, config, server) {
       title: 'error'
     });
   });
-
-  require('../app/sockets')(app, io);
 };

@@ -1,3 +1,5 @@
+var db = require('../models');
+
 module.exports = function(app, io) {
   var cookieParser = app.get('cookieParser');
   var config = require('../../config/config');
@@ -36,9 +38,7 @@ module.exports = function(app, io) {
     var chatboxId = socket.handshake.query.chatboxId;
 
     if (chatboxId) {
-      console.log('here');
       socket.join(chatboxId);
-      var models = app.get('models');
       var session = socket.request.session || {};
       var username = null;
       var authenticated = false;
@@ -54,7 +54,7 @@ module.exports = function(app, io) {
       socket.emit('user connected', username);
 
       socket.on('chat login', function(username, password) {
-        models.User.authenticate(chatboxId, username, password, function(err, authd, user) {
+        db.User.authenticate(chatboxId, username, password, function(err, authd, user) {
           if (authd) {
             session.chatBoxes[chatboxId] = {
               user: user
