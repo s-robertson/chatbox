@@ -8,7 +8,7 @@ personal side project that's a work in progress.
 
 Currently, the features of the app include:
 
-* The ability to access a specific chatbox by visiting /chatbox?boxId=\[ID]
+* The ability to access a specific chatbox by visiting /chatbox/\[ID\]
 * Session-based authentication. 
   * If env is set to "development" sessions are only stored in memory. With the "production" flag, sessions are stored 
   in the PostgreSQL database.

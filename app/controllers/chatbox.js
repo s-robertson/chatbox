@@ -6,8 +6,8 @@ module.exports = function (app) {
   app.use('/', router);
 };
 
-router.get('/chatbox', function(req, res, next) {
-  var boxId = req.query.boxId;
+router.get('/chatbox/:boxId', function(req, res, next) {
+  var boxId = req.params.boxId;
 
   var invalidId = function() {
     res.render('chatbox/invalid');
